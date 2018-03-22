@@ -1,3 +1,18 @@
+- name: check if ubuntu user exists
+  hosts: all
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  tasks:
+    - name: Check if ubuntu home directory exists
+      stat: path=/home/ubuntu
+      register: home_ubuntu_directory
+
+    - name: check if ubuntu user is present
+      fail:
+        msg: "You need to create a user with username ubuntu, example: adduser --disabled-password ubuntu"
+      when: home_ubuntu_directory.stat.exists == False
+
 - name: dependency provisioning
   hosts: all
   become: yes
@@ -59,6 +74,14 @@
     - name: install dht-client-daemon
       raw: sudo npm install -g dht-client-daemon
     - template: src=templates/node_dht_client_daemon.service.j2 dest=/lib/systemd/system/node_dht_client_daemon.service
+
+    - name: Check if file is already there to skip the config generation
+      stat: path=/usr/bin/dht-client-daemon
+      register: default_dht_client_executable
+    - name: Create sym link from the default location
+      raw: ln -s /usr/local/bin/dht-client-daemon /usr/bin/dht-client-daemon
+      when: default_dht_client_executable.stat.exists == False
+
     - name: start dht_client_daemon
       systemd:
         state: started

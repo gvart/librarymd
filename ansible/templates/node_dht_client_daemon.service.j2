@@ -6,7 +6,7 @@ After=network.target
 [Service]
 Type=simple
 User=nobody
-ExecStart=/usr/bin/nodejs /usr/local/bin/dht-client-daemon
+ExecStart=/usr/bin/nodejs /usr/bin/dht-client-daemon
 Restart=on-failure
 
 [Install]

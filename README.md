@@ -17,6 +17,7 @@ dht-client-daemon for dht peer retrieval.
 
 Auto-installer is based on ansible.
 It was tested on Ubuntu 16.x and 17.x.
+A user the name "ubuntu" with must exist, some cron jobs will be added to it.
 You need to run one command to install and configure everything.
 Run it as root or a sudo enabled user.
 
